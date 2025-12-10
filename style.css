@@ -29,6 +29,7 @@ body {
     height: 10px;
     background-color: black;
     border-radius: 1rem;
+    position: relative;
     transition: transform 0.5s; /* use for rotation effect later */
 }
 
