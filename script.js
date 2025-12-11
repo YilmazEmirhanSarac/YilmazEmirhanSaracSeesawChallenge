@@ -11,6 +11,7 @@ const tiltAngleEl = document.getElementById('tiltAngle');
 // --- STATE MANAGEMENT ---
 let objects = [];
 let currentWeight = 0;
+let currentAngle = 0;
 
 // Helper function to generate random integer between 1 and 10
 function getRandomWeight() {
@@ -24,11 +25,27 @@ nextWeightEl.innerText = currentWeight;
 // --- MAIN EVENT LISTENER ---
 plank.addEventListener('click', function(event) {
 
-    // Calculate Click Position relative to the plank
+    // Calculate Visual Center
+    // Even when tilted, the pivot point (center) remains physically at the same screen coordinates.
     const rect = plank.getBoundingClientRect();
-    const positionFromLeft = event.clientX - rect.left;
+    const visualCenter = rect.left + (rect.width / 2)
 
-    //console.log("Distance from letf side (px)", positionFromLeft);
+    // Calculate Visual Distance (The "Shadow")
+    // How far is the mouse click from the center visually?
+    const visualDistanceFromCenter = event.clientX - visualCenter;
+
+    // Perspective Correction (Trigonometry)
+    // When tilted, the visual width of the plank shrinks (Foreshortening).
+    // To find the "actual" physical spot on the plank, we divide the visual distance by the cosine of the angle.
+    // Logic: Actual Distance = Visual Distance / cos(angle)
+    const angleInRadians = currentAngle * (Math.PI / 180);
+    const actualDistanceFromCenter = visualDistanceFromCenter / Math.cos(angleInRadians);
+
+    // Determine Exact Position
+    // Map the calculated distance back to the plank's coordinate system (0-500px, center at 250)
+    const positionFromLeft = 250 + actualDistanceFromCenter;
+
+    console.log("Visual Dist:", visualDistanceFromCenter, "Actual Dist:", actualDistanceFromCenter);
 
     const weight = currentWeight;
 
@@ -118,14 +135,14 @@ function updateSimulation() {
 
     // Physics & Scaling
     // Convert large torque values to degrees. Dividing by 10 acts as a damper.
-    let angle = (netTorque / 10);
+    currentAngle = (netTorque / 10);
 
     // Clamping (Limit Angle)
     // Constrain the rotation between -30 and 30 degrees to simulate the ground.
     // Uses Math.min for the ceiling and Math.max for the floor.
-    angle = Math.max(-30, Math.min(30,angle));
+    currentAngle = Math.max(-30, Math.min(30,currentAngle));
 
     // Update UI (Visual & Text) 
-    plank.style.transform = `rotate(${angle}deg)`;
-    tiltAngleEl.innerText = angle.toFixed(1);
+    plank.style.transform = `rotate(${currentAngle}deg)`;
+    tiltAngleEl.innerText = currentAngle.toFixed(1);
 }
