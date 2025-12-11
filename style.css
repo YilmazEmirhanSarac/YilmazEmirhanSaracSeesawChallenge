@@ -31,6 +31,15 @@ body {
     border-radius: 1rem;
     position: relative;
     transition: transform 0.5s; /* use for rotation effect later */
+
+    /* Creates a vertical grid line every 50px using CSS only */
+    background-image: repeating-linear-gradient(
+        90deg,             /* Direction: Left to Right */
+        transparent 0px,   /* Start transparent */
+        transparent 49px,  /* Keep it transparent for the first 49px (The gap) */
+        white 49px,        /* Hard switch to white color */
+        white 50px         /* End pattern at 50px (Results in a 1px wide line) */
+    );
 }
 
 .pivot {
@@ -47,4 +56,17 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.infoPanel {
+    width: 600px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.statBox {
+    background-color: white;
+    padding: 10px 20px;
+    border-radius: 0.5rem;
+    border: 1px solid black;
 }

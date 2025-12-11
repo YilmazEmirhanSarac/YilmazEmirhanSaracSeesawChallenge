@@ -1,6 +1,10 @@
 console.log("Project connected")
 
 const plank = document.getElementById('plank');
+const leftTotalEl = document.getElementById('leftTotal');
+const rightTotalEl = document.getElementById('rightTotal');
+
+let objects = [];
 
 plank.addEventListener('click', function(event) {
 
@@ -32,4 +36,39 @@ plank.addEventListener('click', function(event) {
     box.style.left = (positionFromLeft - (boxSize / 2)) + 'px';
 
     plank.appendChild(box);
+
+    // The plank is 500px wide, so the pivot center is at 250px.
+    // Logic: If click is before 250px, it's 'left'. Otherwise 'right'.
+    let side = '';
+    
+    if (positionFromLeft < 250) {
+        side = 'left';
+    } else if (positionFromLeft > 250) {
+        side = 'right';
+    } else {
+        side = 'pivot'; // we need to catch this because when there is a box in center it tork equals 0
+    }
+
+    //push the new object's data into our 'objects' array.
+    objects.push({
+        weight: weight,
+        side: side,
+        position: positionFromLeft
+    })
+
+    console.log("Guncel liste:", objects);
+
+    let leftSum = 0;
+    let rightSum = 0;
+
+    objects.forEach(item => {
+        if (item.side === 'left') {
+            leftSum += item.weight;
+        } else if (item.side === 'right') {
+            rightSum += item.weight;
+        }
+    });
+
+    leftTotalEl.innerText = leftSum;
+    rightTotalEl.innerText = rightSum;
 })
