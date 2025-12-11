@@ -10,18 +10,22 @@ plank.addEventListener('click', function(event) {
 
     console.log("Distance from letf side (px)", positionFromLeft);
 
+    const weight = Math.floor(Math.random() * 10 + 1);
+
     // Create the box element
-    const boxSize = 20;
+    const boxSize = 20 + (weight * 2); // I change this for better ui more weight bigger box
 
     const box = document.createElement('div');
+    box.classList.add('box');
+    box.innerText = weight;
     
     box.style.width = boxSize + 'px';
     box.style.height = boxSize + 'px';
-    box.style.backgroundColor = 'red';
-    box.style.position = 'absolute';
-    box.style.border = 'solid 1px black';
     // Move up by box height so it sits on top of the plank, not inside it
     box.style.top = (-boxSize) + 'px';
+
+    const lightness = 95 - (weight * 5);
+    box.style.backgroundColor = `hsl(0, 70%, ${lightness}%)`;
 
     // Center the box horizontally on the clicked point
     // Logic: Click Position - (Box Width / 2) -> (20 / 2 = 10)
