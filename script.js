@@ -3,8 +3,17 @@ console.log("Project connected")
 const plank = document.getElementById('plank');
 const leftTotalEl = document.getElementById('leftTotal');
 const rightTotalEl = document.getElementById('rightTotal');
+const nextWeightEl = document.getElementById('nextWeight');
 
 let objects = [];
+let currentWeight = 0;
+
+function getRandomWeight() {
+    return Math.floor(Math.random() * 10 + 1);
+}
+// Shows next weight before any box placed
+currentWeight = getRandomWeight();
+nextWeightEl.innerText = currentWeight;
 
 plank.addEventListener('click', function(event) {
 
@@ -14,7 +23,7 @@ plank.addEventListener('click', function(event) {
 
     console.log("Distance from letf side (px)", positionFromLeft);
 
-    const weight = Math.floor(Math.random() * 10 + 1);
+    const weight = currentWeight;
 
     // Create the box element
     const boxSize = 20 + (weight * 2); // I change this for better ui more weight bigger box
@@ -36,6 +45,9 @@ plank.addEventListener('click', function(event) {
     box.style.left = (positionFromLeft - (boxSize / 2)) + 'px';
 
     plank.appendChild(box);
+    // After some box placed generate next boxes kg and shows in info panel
+    currentWeight = getRandomWeight();
+    nextWeightEl.innerText = currentWeight;
 
     // The plank is 500px wide, so the pivot center is at 250px.
     // Logic: If click is before 250px, it's 'left'. Otherwise 'right'.
