@@ -61,24 +61,33 @@ body {
 
 .infoPanel {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 15px;
 }
 
 .statBox {
     background-color: white;
-    padding: 10px 20px;
+    padding: 10px;
     border-radius: 0.5rem;
     border: 1px solid black;
     min-width: 180px;
     text-align: center;
+    background-color: lightgrey;
 }
 
 .container {
-    width: 800px;
+    width: 95%;
+    max-width: 880px;
+    min-width: 520px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    background-color: white;  
+    padding: 40px;
+    border-radius: 1rem;
+    border: 1px solid gray;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
 }
 
 .controls {
@@ -102,4 +111,22 @@ body {
 
 .resetBtn:hover {
     background-color: red;
+}
+
+/* Tablet View */
+@media (max-width: 850px) {
+    .infoPanel {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+/* Mobile View */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    .infoPanel {
+        grid-template-columns: 1fr; 
+    }
 }
