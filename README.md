@@ -3,8 +3,7 @@
 A visually accurate, physics-based seesaw simulation built with pure JavaScript, HTML, and CSS. This project focuses on realistic torque mechanics, state persistence, and responsive UI design without external libraries.
 
 ## Live Demo
-[Click here to play the simulation](https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/)
-*(Please replace the link above after deployment)*
+[Click here to play the simulation](https://yilmazemirhansarac.github.io/YilmazEmirhanSaracSeesawChallenge/)
 
 ## 🛠️ Features
 - **Accurate Physics Engine:** Calculates net torque (`Weight × Distance`) to determine tilt angle.
