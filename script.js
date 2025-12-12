@@ -1,4 +1,4 @@
-//console.log("Project connected")
+//console.log('Project connected')
 
 
 // ---DOM ELEMENTS---
@@ -22,6 +22,34 @@ function getRandomWeight() {
 currentWeight = getRandomWeight();
 nextWeightEl.innerText = currentWeight;
 
+const savedData = localStorage.getItem('seesawState');
+
+if (savedData) {
+
+    // Persistence: Hydrate the state by parsing the string back into an array
+    objects = JSON.parse(savedData);
+
+    let leftSum = 0;
+    let rightSum = 0;
+
+    objects.forEach(item => {
+        // Re-render: Visually reconstruct the scene for each saved object
+        createBoxVisual(item.weight, item.position);
+
+        if (item.side === 'left') {
+            leftSum += item.weight;
+        } else if (item.side === 'right') {
+            rightSum += item.weight;
+        }
+    });
+
+    leftTotalEl.innerText = leftSum;
+    rightTotalEl.innerText = rightSum;
+
+    // Trigger Physics Calculation
+    updateSimulation();
+}
+
 // --- MAIN EVENT LISTENER ---
 plank.addEventListener('click', function(event) {
 
@@ -30,14 +58,14 @@ plank.addEventListener('click', function(event) {
     const rect = plank.getBoundingClientRect();
     const visualCenter = rect.left + (rect.width / 2)
 
-    // Calculate Visual Distance (The "Shadow")
+    // Calculate Visual Distance (The 'Shadow')
     // How far is the mouse click from the center visually?
     const visualDistanceFromCenter = event.clientX - visualCenter;
 
     // Perspective Correction (Trigonometry)
     // When tilted, the visual width of the plank shrinks (Foreshortening).
-    // To find the "actual" physical spot on the plank, we divide the visual distance by the cosine of the angle.
-    // Logic: Actual Distance = Visual Distance / cos(angle)
+    // To find the 'actual' physical spot on the plank, we divide the visual distance by the cosine of the angle.
+    // Logic: Actual Distane = Visual Distance / cos(angle)
     const angleInRadians = currentAngle * (Math.PI / 180);
     const actualDistanceFromCenter = visualDistanceFromCenter / Math.cos(angleInRadians);
 
@@ -45,32 +73,12 @@ plank.addEventListener('click', function(event) {
     // Map the calculated distance back to the plank's coordinate system (0-500px, center at 250)
     const positionFromLeft = 250 + actualDistanceFromCenter;
 
-    console.log("Visual Dist:", visualDistanceFromCenter, "Actual Dist:", actualDistanceFromCenter);
+    console.log('Visual Dist:', visualDistanceFromCenter, 'Actual Dist:', actualDistanceFromCenter);
 
     const weight = currentWeight;
 
-    // Create the Visual Box Element
-    // Dynamic Sizing: Heavier boxes are larger for better UI feedback (20px base + 2px per kg)
-    const boxSize = 20 + (weight * 2);
-
-    const box = document.createElement('div');
-    box.classList.add('box');
-    box.innerText = weight;
-    
-    box.style.width = boxSize + 'px';
-    box.style.height = boxSize + 'px';
-    // Move up by box height so it sits on top of the plank, not inside it
-    box.style.top = (-boxSize) + 'px';
-
-    // Dynamic Coloring: Heavier weights are darker (HSL Lightness decreases)
-    const lightness = 95 - (weight * 5);
-    box.style.backgroundColor = `hsl(0, 70%, ${lightness}%)`;
-
-    // Horizontal Positioning: Center the box on the clicked point
-    // Logic: Click Position - (Box Width / 2) -> (20 / 2 = 10)
-    box.style.left = (positionFromLeft - (boxSize / 2)) + 'px';
-
-    plank.appendChild(box);
+    // Call the box visual function
+    createBoxVisual(weight, positionFromLeft);
 
     // Generate a new weight for the next click and update the UI
     currentWeight = getRandomWeight();
@@ -98,8 +106,6 @@ plank.addEventListener('click', function(event) {
         position: positionFromLeft
     })
 
-    //console.log("Guncel liste:", objects);
-
     // Calculate & Update Total Weights per Side
     let leftSum = 0;
     let rightSum = 0;
@@ -117,7 +123,37 @@ plank.addEventListener('click', function(event) {
 
     // Trigger Physics Calculation
     updateSimulation();
+
+    // Persistence: Serialize and save the current state to prevent data loss on refresh
+    localStorage.setItem('seesawState', JSON.stringify(objects));
 })
+
+
+
+function createBoxVisual(weight,positionFromLeft){
+    // Create the Visual Box Element
+    // Dynamic Sizing: Heavier boxes are larger for better UI feedback (20px base + 2px per kg)
+    const boxSize = 20 + (weight * 2);
+
+    const box = document.createElement('div');
+    box.classList.add('box');
+    box.innerText = weight;
+    
+    box.style.width = boxSize + 'px';
+    box.style.height = boxSize + 'px';
+    // Move up by box height so it sits on top of the plank, not inside it
+    box.style.top = (-boxSize) + 'px';
+
+    // Dynamic Coloring: Heavier weights are darker (HSL Lightness decreases)
+    const lightness = 95 - (weight * 5);
+    box.style.backgroundColor = `hsl(0, 70%, ${lightness}%)`;
+
+    // Horizontal Positioning: Center the box on the clicked point
+    // Logic: Click Position - (Box Width / 2) -> (20 / 2 = 10)
+    box.style.left = (positionFromLeft - (boxSize / 2)) + 'px';
+
+    plank.appendChild(box);
+}
 
 // --- PHYSICS ENGINE ---
 function updateSimulation() {
