@@ -80,3 +80,26 @@ body {
     flex-direction: column;
     gap: 20px;
 }
+
+.controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.resetBtn {
+    padding: 10px 30px;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    background-color: lightcoral;
+    color: white;
+}
+
+.resetBtn:active {
+    transform: scale(0.95);
+}
+
+.resetBtn:hover {
+    background-color: red;
+}
