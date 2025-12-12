@@ -7,6 +7,7 @@ const leftTotalEl = document.getElementById('leftTotal');
 const rightTotalEl = document.getElementById('rightTotal');
 const nextWeightEl = document.getElementById('nextWeight');
 const tiltAngleEl = document.getElementById('tiltAngle');
+const resetBtn = document.getElementById('resetBtn');
 
 // --- STATE MANAGEMENT ---
 let objects = [];
@@ -176,3 +177,26 @@ function updateSimulation() {
     plank.style.transform = `rotate(${currentAngle}deg)`;
     tiltAngleEl.innerText = currentAngle.toFixed(1);
 }
+
+// --- RESET FUNCTIONALITY ---
+resetBtn.addEventListener('click', function() {
+
+    // Clear State: Empty the objects array
+    objects = [];
+
+    // Clear DOM: Remove all box elements from the plank
+    const boxes = document.querySelectorAll('.box');
+    boxes.forEach(box => box.remove());
+
+    // Clear Storage: Remove saved data to prevent reloading old state
+    localStorage.removeItem('seesawState');
+
+    // Reset UI & Physics: Update stats to 0 and level the plank
+    updateWeightStats();
+    updateSimulation();
+
+    // Generate a new random weight
+    currentWeight = getRandomWeight();
+    nextWeightEl.innerText = currentWeight;
+
+})
