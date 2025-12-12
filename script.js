@@ -29,22 +29,12 @@ if (savedData) {
     // Persistence: Hydrate the state by parsing the string back into an array
     objects = JSON.parse(savedData);
 
-    let leftSum = 0;
-    let rightSum = 0;
-
     objects.forEach(item => {
         // Re-render: Visually reconstruct the scene for each saved object
         createBoxVisual(item.weight, item.position);
-
-        if (item.side === 'left') {
-            leftSum += item.weight;
-        } else if (item.side === 'right') {
-            rightSum += item.weight;
-        }
     });
 
-    leftTotalEl.innerText = leftSum;
-    rightTotalEl.innerText = rightSum;
+    updateWeightStats();
 
     // Trigger Physics Calculation
     updateSimulation();
@@ -106,7 +96,19 @@ plank.addEventListener('click', function(event) {
         position: positionFromLeft
     })
 
-    // Calculate & Update Total Weights per Side
+    // Recalculate totals using the extracted helper function
+    updateWeightStats();
+
+    // Trigger Physics Calculation
+    updateSimulation();
+
+    // Persistence: Serialize and save the current state to prevent data loss on refresh
+    localStorage.setItem('seesawState', JSON.stringify(objects));
+})
+
+// --- HELPER FUNCTION: UPDATE WEIGHT STATS ---
+// Iterates through the state array to calculate total weights and updates the DOM.
+function updateWeightStats() {
     let leftSum = 0;
     let rightSum = 0;
 
@@ -120,15 +122,7 @@ plank.addEventListener('click', function(event) {
 
     leftTotalEl.innerText = leftSum;
     rightTotalEl.innerText = rightSum;
-
-    // Trigger Physics Calculation
-    updateSimulation();
-
-    // Persistence: Serialize and save the current state to prevent data loss on refresh
-    localStorage.setItem('seesawState', JSON.stringify(objects));
-})
-
-
+}
 
 function createBoxVisual(weight,positionFromLeft){
     // Create the Visual Box Element
