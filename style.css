@@ -14,7 +14,6 @@ body {
 }
 
 .seesawSystem {
-    /*background-color: red;*/
     width: 100%;
     height: 200px;
     display: flex;
@@ -30,7 +29,7 @@ body {
     background-color: black;
     border-radius: 1rem;
     position: relative;
-    transition: transform 0.5s; /* use for rotation effect later */
+    transition: transform 0.5s; /* use for rotation effect */
 
     /* Creates a vertical grid line every 50px using CSS only */
     background-image: repeating-linear-gradient(
